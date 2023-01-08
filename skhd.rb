@@ -1,9 +1,7 @@
 class Skhd < Formula
   desc "Simple hotkey-daemon for macOS."
   homepage "https://github.com/koekeishiya/skhd"
-  url "https://github.com/koekeishiya/skhd/archive/v0.3.5.zip"
-  sha256 "64e40b4f65e9db1c4a4ce333b4978bbd84fb72df62e5d17dd2b6a41bf008ee10"
-  head "https://github.com/koekeishiya/skhd.git"
+  head "https://github.com/hunterliao29/skhd.git"
 
   option "with-logging", "Redirect stdout and stderr to log files"
 

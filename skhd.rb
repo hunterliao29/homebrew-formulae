@@ -3,11 +3,9 @@ class Skhd < Formula
   homepage "https://github.com/koekeishiya/skhd"
   head "https://github.com/hunterliao29/skhd.git"
 
-  option "with-logging", "Redirect stdout and stderr to log files"
-
   def install
-    (var/"log/skhd").mkpath
-    system "make", "install"
+    ENV.deparallelize
+    system "make", "-j1", "install"
     bin.install "#{buildpath}/bin/skhd"
     (pkgshare/"examples").install "#{buildpath}/examples/skhdrc"
   end
@@ -16,30 +14,15 @@ class Skhd < Formula
     Copy the example configuration into your home directory:
       cp #{opt_pkgshare}/examples/skhdrc ~/.skhdrc
 
-    If the formula has been built with --with-logging, logs will be found in
-      #{var}/log/skhd/skhd.[out|err].log
+    If you want skhd to be managed by launchd (start automatically upon login):
+      skhd --start-service
+
+    When running as a launchd service logs will be found in:
+      /tmp/skhd_<user>.[out|err].log
     EOS
   end
 
-  if build.with? "logging"
-    service do
-      run "#{opt_bin}/skhd"
-      environment_variables PATH: std_service_path_env
-      keep_alive true
-      log_path "#{var}/log/skhd/skhd.out.log"
-      error_log_path "#{var}/log/skhd/skhd.err.log"
-      process_type :interactive
-    end 
-  else
-    service do
-      run "#{opt_bin}/skhd"
-      environment_variables PATH: std_service_path_env
-      keep_alive true
-      process_type :interactive
-    end 
-  end
-
   test do
-    assert_match "skhd #{version}", shell_output("#{bin}/skhd --version")
+    assert_match "skhd-v#{version}", shell_output("#{bin}/skhd --version")
   end
 end
